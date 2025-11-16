@@ -1,10 +1,14 @@
 package controller;
+
+import java.util.*;
+
 //이 클래스는 게임의 전반적 흐름을 제어하는 클래스 입니다
 
 public class GameController {
-	//DB호출 임시 List<String> words 
+	//DB호출 임시 
 	void runGame()
 	{
+		
 		/*
 		 *(임시) DB에서 단어 목록을 가져옵니다.
 view.showGameStart() 호출
