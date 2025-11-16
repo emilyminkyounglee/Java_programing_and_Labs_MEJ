@@ -2,16 +2,24 @@ package controller;
 
 import java.util.*;
 
+import model.GameService;
+import player.Player;
+import view.GameView;
+
 //이 클래스는 게임의 전반적 흐름을 제어하는 클래스 입니다
 
 public class GameController {
 	
 	private final GameView view;
 	private final GameService service;
-	
-	public GameController(GameView view, GameService service) {
+	private Player p1;
+	private Player p2;
+	int role = (int)((int)Math.random()*1000/100);
+	public GameController(GameView view, GameService service, Player p1, Player p2) {
 		this.view = view;
 		this.service = service;
+		this.p1 = p1;
+		this.p2 = p2;
 	}
 	
 	// DB호출 임시 List<String> words 
@@ -24,15 +32,18 @@ public class GameController {
 		view.showGameStart();
 		
 		// 3. 플레이어 이름 임시 설정, service에 게임 준비 요청
-		String player1 = "플레이어1";
-		String player2 = "플레이어2";
-		service.setupNewGame(wordList, player1, player2);
+//		String player1 = "플레이어1";
+//		String player2 = "플레이어2";
+		service.setPlayerInfo(p1, role, "player1");
+		service.setPlayerInfo(p1, role+1, "Player2");
+		service.setupNewGame(wordList, p1, p2);
 		
+		boolean correct = false;
 		// 4. 메인 게임 루프
 		while (!service.isGameOver()) {
 			
 			// 5. 새 라운드 시작
-			service.startNewRound();
+			service.newRound();
 			
 			// 6. view에 라운드 정보 표시
 			view.showRoundStart(service.getCurrentRound(), service.getDrawerName(), service.getGuesserName);
@@ -41,7 +52,7 @@ public class GameController {
 			view.showWordToDrawer(service.getWordForDrawer());
 			
 			// 8. 라운드 루프 (최대 5회)
-			while (!service.isRoundOver()) {
+			while (!service.isRoundOver(correct)) {
 				
 				// 9. 그림 그리기
 				view.getDrawingInput();
@@ -50,7 +61,7 @@ public class GameController {
 				String answer = view.getAnswerInput();
 				
 				// 11. service에 정답 확인 요청
-				boolean correct = service.checkAnswer(answer);
+				correct = service.checkAnswer(answer);
 				
 				// 12. view에 결과 표시
 				view.showAnswerResult(correct, service.getTriesLeft());
@@ -59,12 +70,12 @@ public class GameController {
 			
 			// 13. 라운드 종료
 			boolean roundSuccess = service.getCurrentRoundScore() > 0;
-			view.showRoundEnd(roundSuccess, service.getCurrentRoundScore(), sevice.getWordForDrawer());
+			view.showRoundEnd(roundSuccess, service.getCurrentRoundScore(), service.getWordForDrawer());
 						
 		}
 		
 		// 14. 최종 점수 표시
-		view.showFinalScore(service.getTotalScore());
+		view.showFinalScore(service.getScore());
 		
 		
 	}

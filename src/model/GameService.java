@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import player.Player;
 import player.Role;
 
@@ -78,7 +81,7 @@ public class GameService {
 	{
 		return rounds;
 	}
-	public void resetGame()//게임을 총체적으로 다시 실행해볼때 
+	public void setupNewGame(List<String> wordList, Player p1, Player p2)//게임을 총체적으로 다시 실행해볼때 
 	{
 		tries = 5;
 		rounds = 1;
@@ -116,5 +119,12 @@ public class GameService {
 	public void setAnswer(String answer)
 	{
 		this.answer = answer;
+	}
+	public int getCurrentRoundScore()
+	{
+		return this.tries;
+	}
+	public String getWordForDrawer() { // 정답 알려주는 애 
+		return this.answer;
 	}
 }
