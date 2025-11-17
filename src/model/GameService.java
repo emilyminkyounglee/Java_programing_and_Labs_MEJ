@@ -14,6 +14,7 @@ public class GameService {
 	private long time;
 	private String answer;
 	private int score = 0;
+	private int roundScore = 0;
 	private static final long ROUND_LIMIT_MS = 90_000;
 	public boolean isGameOver() // 현재 게임이 종료되었는지 확인 aka 6라운드까지 진행 완료 했는지
 	{
@@ -29,12 +30,14 @@ public class GameService {
 		boolean isOver = false;
 		
 		if (correct) {
+			roundScore = tries;
 	        score += tries;   
 	        tries = 5;
 	        rounds++; 
 	        isOver = true;
 	    }
 		else if (tries < 1 || isTimeOver()) {
+			roundScore = 0;
 	        tries = 5;
 	        rounds++;
 	        isOver = true;
@@ -122,9 +125,24 @@ public class GameService {
 	}
 	public int getCurrentRoundScore()
 	{
-		return this.tries;
+		return this.roundScore;
 	}
 	public String getWordForDrawer() { // 정답 알려주는 애 
 		return this.answer;
+	}
+	public String getDrawerName(Player p1, Player p2)
+	{
+		if(p1.getRole().equals(Role.DRAWER))
+		{
+			return p1.getName();
+		}
+		return p2.getName();
+	}
+	public String getGuesserName(Player p1, Player p2)
+	{
+		if(p1.getRole().equals(Role.GUESSER)) {
+			return p1.getName();
+		}
+		return p2.getName();
 	}
 }
