@@ -92,7 +92,6 @@ public class GameController {
 			log("round is over");
 			service.changeRoles(p1, p2);
 			log("roles changed");
-			
 						
 		}
 		
